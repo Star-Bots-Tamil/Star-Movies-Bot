@@ -119,7 +119,6 @@ class Database:
     async def get_chat(self, chat):
         chat = await self.grp.find_one({'id':int(chat)})
         return False if not chat else chat.get('chat_status')
-    
 
     async def re_enable_chat(self, id):
         chat_status=dict(
@@ -157,7 +156,6 @@ class Database:
     async def update_verify_status(self, user_id, verify):
         await self.col.update_one({'id': int(user_id)}, {'$set': {'verify_status': verify}})
 
-    
     async def total_chat_count(self):
         count = await self.grp.count_documents({})
         return count
@@ -168,6 +166,6 @@ class Database:
 
 
     async def get_db_size(self):
-        return (await mydb.command("dbstats"))['dataSize']
+        return (await self.db.command("dbstats"))['dataSize']
         
 db = Database(DATABASE_URL, DATABASE_NAME)
