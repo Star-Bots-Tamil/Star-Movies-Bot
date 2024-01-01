@@ -1,9 +1,6 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from info import DATABASE_NAME, DATABASE_URL, IMDB_TEMPLATE, WELCOME_TEXT, AUTH_CHANNEL, LINK_MODE, TUTORIAL, SHORTLINK_URL, SHORTLINK_API, SHORTLINK, FILE_CAPTION, IMDB, WELCOME, SPELL_CHECK, PROTECT_CONTENT, AUTO_FILTER, AUTO_DELETE
 
-client = AsyncIOMotorClient(DATABASE_URL)
-mydb = client[DATABASE_NAME]
-
 class Database:
     default_setgs = {
         'auto_filter': AUTO_FILTER,
@@ -30,10 +27,11 @@ class Database:
         'link': ""
     }
     
-    def __init__(self):
-        self.col = mydb.Users
-        self.grp = mydb.Groups
-
+    def __init__(self, uri, database_name):
+        self._client = motor.motor_asyncio.AsyncIOMotorClient(uri)
+        self.db = self._client[database_name]
+        self.col = self.db.users
+        self.grp = self.db.groups
 
     def new_user(self, id, name):
         return dict(
@@ -97,7 +95,6 @@ class Database:
     async def get_all_users(self):
         return self.col.find({})
     
-
     async def delete_user(self, user_id):
         await self.col.delete_many({'id': int(user_id)})
 
@@ -172,5 +169,4 @@ class Database:
     async def get_db_size(self):
         return (await mydb.command("dbstats"))['dataSize']
         
-
-db = Database()
+db = Database(DATABASE_URI, DATABASE_NAME)
