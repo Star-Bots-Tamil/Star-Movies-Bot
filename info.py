@@ -27,7 +27,7 @@ API_HASH = environ.get('API_HASH', '5264bf4663e9159565603522f58d3c18')
 if len(API_HASH) == 0:
     print('Error - API_HASH is missing, exiting now')
     exit()
-BOT_TOKEN = environ.get('BOT_TOKEN', '5865794282:AAEtJgoAOKcDR6nKRyA8Kr2-QiQpfely5vw')
+BOT_TOKEN = environ.get('BOT_TOKEN', '5865794282:AAG0zdJICj9d_GtA8e3HGvHK1e2kyHQ_9qg')
 if len(BOT_TOKEN) == 0:
     print('Error - BOT_TOKEN is missing, exiting now')
     exit()
@@ -77,7 +77,7 @@ if len(DATABASE_URL) == 0:
     print('Error - DATABASE_URL is missing, exiting now')
     exit()
 DATABASE_NAME = environ.get('DATABASE_NAME', "Cluster0")
-COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Star_files')
+COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Star_Files')
 
 # Links
 SUPPORT_LINK = environ.get('SUPPORT_LINK', 'https://t.me/SL_Bots_Support')
