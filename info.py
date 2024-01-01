@@ -77,7 +77,7 @@ if len(DATABASE_URL) == 0:
     print('Error - DATABASE_URL is missing, exiting now')
     exit()
 DATABASE_NAME = environ.get('DATABASE_NAME', "Cluster0")
-COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Star_files')
+COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Star_Files')
 
 # Links
 SUPPORT_LINK = environ.get('SUPPORT_LINK', 'https://t.me/Star_Bots_Tamil_Support')
