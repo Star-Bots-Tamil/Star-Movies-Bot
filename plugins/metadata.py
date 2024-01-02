@@ -1,3 +1,4 @@
+import os
 from pyrogram import Client, filters
 import subprocess
 
@@ -22,4 +23,5 @@ def edit_metadata(client, message):
         client.send_video(message.chat.id, edited_file_path, reply_to_message_id=message.reply_to_message.message_id)
 
         # Clean up files
-        subprocess.run(["rm", file_path, edited_file_path])
+        os.remove(file_path)
+        os.remove(edited_file_path)
