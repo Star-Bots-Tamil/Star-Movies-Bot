@@ -1,24 +1,44 @@
-from info import BIN_CHANNEL, URL
-from utils import temp
-from web.utils.custom_dl import TGCustomYield
-from utils import get_size
+import jinja2
+from info import *
+from web.bot import StarMoviessBot
+from web.utils.human_readable import humanbytes
+from web.utils.file_properties import get_file_ids
+from web.server.exceptions import InvalidHash
 import urllib.parse
-import secrets
-import mimetypes
-import aiofiles
 import logging
 import aiohttp
 
-async def media_watch(message_id):
-    media_msg = await temp.BOT.get_messages(BIN_CHANNEL, message_id)
-    file_properties = await TGCustomYield().generate_file_properties(media_msg)
-    file_name, mime_type = file_properties.file_name, file_properties.mime_type
-    src = urllib.parse.urljoin(URL, f'download/{message_id}')
-    tag = mime_type.split('/')[0].strip()
-    if tag == 'video':
-        async with aiofiles.open('web/template/req.html') as r:
-            heading = 'Watch - {}'.format(file_name)
-            html = (await r.read()).replace('tag', tag) % (heading, file_name, src)
+async def render_page(id, secure_hash, src=None):
+    file = await StarMoviessBot.get_messages(int(LOG_CHANNEL), int(id))
+    file_data = await get_file_ids(StarMoviessBot, int(LOG_CHANNEL), int(id))
+    if file_data.unique_id[:6] != secure_hash:
+        logging.debug(f"link hash: {secure_hash} - {file_data.unique_id[:6]}")
+        logging.debug(f"Invalid hash for message with - ID {id}")
+        raise InvalidHash
+
+    src = urllib.parse.urljoin(
+        URL,
+        f"{id}/{urllib.parse.quote_plus(file_data.file_name)}?hash={secure_hash}",
+    )
+
+    tag = file_data.mime_type.split("/")[0].strip()
+    file_size = humanbytes(file_data.file_size)
+    if tag in ["video", "audio"]:
+        template_file = "stream/template/req.html"
     else:
-        html = '<h1>This is not streamable file</h1>'
-    return html
+        template_file = "stream/template/dl.html"
+        async with aiohttp.ClientSession() as s:
+            async with s.get(src) as u:
+                file_size = humanbytes(int(u.headers.get("Content-Length")))
+
+    with open(template_file) as f:
+        template = jinja2.Template(f.read())
+
+    file_name = file_data.file_name.replace("_", " ")
+
+    return template.render(
+        file_name=file_name,
+        file_url=src,
+        file_size=file_size,
+        file_unique_id=file_data.unique_id,
+    )
