@@ -317,6 +317,18 @@
     <!--🥰  Thank you for giving me credit @LazyDeveloperr  🥰 -->
     <script src="https://cdn.plyr.io/3.6.9/plyr.js"></script>
 	<script>
+const fileLinks = [
+    'path/to/audio1.mp3',
+    'path/to/audio2.mp3',
+    // Add more file links as needed
+];
+
+// Create an array of audio sources
+const audioSources = fileLinks.map((file, index) => ({
+    src: file,
+    type: 'audio/mp3',
+    label: `Audio ${index + 1}`
+}));
         const controls = [
             'play-large',
             'rewind','play', 
@@ -336,8 +348,14 @@
             'fullscreen'
         ];
         document.addEventListener('DOMContentLoaded', () => {
-            const player = Plyr.setup('.player', { controls });
-        });
+    const players = Plyr.setup('.player', { controls, quality: { options: ['1080p', '720p', '480p'] } });
+
+    // Iterate over audio sources and create player instances
+    audioSources.forEach((audioSource, index) => {
+        const player = new Plyr(players[index], { controls, quality: { options: ['high', 'medium', 'low'] } });
+        player.source = audioSource;
+    });
+});
 
     </script>
     <!-- iterate animation -->
