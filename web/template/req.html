@@ -347,20 +347,17 @@ const audioSources = fileLinks.map((file, index) => ({
             'download',
             'fullscreen'
         ];
-        document.addEventListener('DOMContentLoaded', () => {
-    const players = Plyr.setup('.player', { controls, quality: { options: ['1080p', '720p', '480p'] } });
+document.addEventListener('DOMContentLoaded', () => {
+        const players = Plyr.setup('.player', { controls, quality: { options: ['1080p', '720p', '480p', '360p', '240p', '144p'] } });
 
-    // Iterate over audio sources and create player instances
-    audioSources.forEach((audioSource, index) => {
-        const player = new Plyr(players[index], { controls, quality: { options: ['high', 'medium', 'low'] } });
-        player.source = audioSource;
+        // Iterate over audio sources and create player instances
+        audioSources.forEach((audioSource, index) => {
+            const player = new Plyr(players[index], { controls, quality: { options: ['high', 'medium', 'low'] } });
+            player.source = audioSource;
+        });
     });
-});
-
     </script>
     <!-- iterate animation -->
-
-
 
 
     <!-- disabling right click -->
