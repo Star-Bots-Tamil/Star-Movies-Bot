@@ -7,6 +7,7 @@ import ast
 import math
 from os import environ
 from os import getenv
+from typing import Any, Optional, Union
 from pyrogram.errors.exceptions.bad_request_400 import MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
 from Script import script
 from datetime import datetime, timedelta
@@ -40,6 +41,31 @@ def get_media_file_name(m):
         return urllib.parse.quote_plus(media.file_name)
     else:
         return None
+
+def get_media_from_message(message: "Message") -> Any:
+    media_types = (
+        "audio",
+        "document",
+        "photo",
+        "sticker",
+        "animation",
+        "video",
+        "voice",
+        "video_note",
+    )
+    for attr in media_types:
+        media = getattr(message, attr, None)
+        if media:
+            return media
+
+def get_hash(media_msg: Union[str, Message], length: int) -> str:
+    if isinstance(media_msg, Message):
+        media = get_media_from_message(media_msg)
+        unique_id = getattr(media, "file_unique_id", "")
+    else:
+        unique_id = media_msg
+    long_hash = hashlib.sha256(unique_id.encode("UTF-8")).hexdigest()
+    return long_hash[:length]
 
 @Client.on_callback_query(filters.regex(r"^stream"))
 async def aks_downloader(bot, query):
