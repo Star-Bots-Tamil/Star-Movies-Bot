@@ -68,17 +68,21 @@ def get_hash(media_msg: Union[str, Message], length: int) -> str:
     return long_hash[:length]
 
 @Client.on_callback_query(filters.regex(r"^stream"))
+@Client.on_callback_query(filters.regex(r"^stream"))
 async def aks_downloader(bot, query):
     file_id = query.data.split('#', 1)[1]
     msg = await bot.send_cached_media(chat_id=BIN_CHANNEL, file_id=file_id)
     watch = f"{URL}watch/{msg.id}"
     download = f"{URL}download/{msg.id}"
-    btn= [[
-        InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ", url=watch),
-        InlineKeyboardButton("ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ", url=download)
-    ],[
-        InlineKeyboardButton('❌ ᴄʟᴏsᴇ ❌', callback_data='close_data')
-    ]]
+    btn = [
+        [
+            InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ", url=watch),
+            InlineKeyboardButton("ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ", url=download)
+        ],
+        [
+            InlineKeyboardButton('❌ ᴄʟᴏsᴇ ❌', callback_data='close_data')
+        ]
+    ]
     await query.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(btn)
     )
@@ -98,13 +102,24 @@ async def aks_downloader(bot, query):
     group=4,
 )
 async def handle_media_message(client, message):
-    reply_markup = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Generate Link", callback_data="stream")]]
-    )
-    await message.reply_text(
-        "Here's your media.",
-        reply_markup=reply_markup
-    )
+    # Extract file ID from the message if applicable
+    file_id = message.document.file_id if message.document else None
+    file_id = file_id or message.video.file_id if message.video else None
+    # Add similar lines for other media types as needed
+
+    if file_id:
+        callback_data = f"stream#{file_id}"
+        reply_markup = InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Generate Link", callback_data=callback_data)]]
+        )
+        await message.reply_text(
+            "Here's your media.",
+            reply_markup=reply_markup
+        )
+    else:
+        await message.reply_text(
+            "Sorry, I couldn't process your media file."
+        )
 
 #@Client.on_message(
 
