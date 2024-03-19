@@ -22,6 +22,8 @@ from aiohttp import web
 from pyrogram import Client
 from info import *
 
+SESSION = "starbots"
+
 class StarMoviessXBot(Client):
     def __init__(self):
         super().__init__(
