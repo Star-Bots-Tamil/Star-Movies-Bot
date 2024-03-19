@@ -1,8 +1,12 @@
 import random
 import asyncio
+import aiohttp
+import urllib.parse
 import re, time
 import ast
 import math
+from os import environ
+from os import getenv
 from pyrogram.errors.exceptions.bad_request_400 import MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
 from Script import script
 from datetime import datetime, timedelta
@@ -18,6 +22,9 @@ import logging
 
 BUTTONS = {}
 CAP = {}
+
+HASH_LENGTH = int(environ.get("HASH_LENGTH", 7))
+BANNED_CHANNELS = list(set(int(x) for x in str(getenv("BANNED_CHANNELS", "-1001296894100")).split()))
 
 async def get_shortlink(link):
     url = 'https://tnshort.net/api'
@@ -67,12 +74,7 @@ async def channel_receive_handler(bot, broadcast):
         log_msg = await broadcast.forward(chat_id=BIN_CHANNEL)
         file_name = get_media_file_name(broadcast)
         file_hash = get_hash(log_msg, HASH_LENGTH)
-        stream_link = "https://{}/{}/{}?hash={}".format(Var.FQDN, log_msg.id, file_name, file_hash) if Var.ON_HEROKU or Var.NO_PORT else \
-            "http://{}:{}/{}/{}?hash={}".format(Var.FQDN,
-                                    Var.PORT,
-                                    log_msg.id,
-                                    file_name,
-                                    file_hash)
+        stream_link = f"{URL}watch/{log_msg.id}"
         shortened_link = await get_shortlink(stream_link)
 
         await log_msg.reply_text(
