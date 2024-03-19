@@ -8,8 +8,7 @@ class script(object):
 ★ Language: <a href=https://www.python.org>Python</a>
 ★ Library: <a href=https://pyrogram.org>Pyrogram</a>"""
 
-    MY_OWNER_TXT = """★ Name: Hansaka Anuhas
-★ Username: @TG_Karthik
+    MY_OWNER_TXT = """★ Username: @TG_Karthik
 ★ Name: Karthik
 ★ Country: India 🇮🇳"""
 
