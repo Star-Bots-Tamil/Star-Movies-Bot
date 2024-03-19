@@ -78,7 +78,7 @@ async def channel_receive_handler(bot, broadcast):
         shortened_link = await get_shortlinkk(stream_link)
 
         await log_msg.reply_text(
-            text=f"<b>Channel Name :- {broadcast.chat.title}\nChannel ID :- <code>{broadcast.chat.id}</code>\nRequest URL :- {shortened_link}</b>",
+            text=f"<b>Channel Name :- {broadcast.chat.title}\nChannel ID :- <code>{broadcast.chat.id}</code>\nRequest URL :- {stream_link}</b>",
             quote=True,
             parse_mode=ParseMode.HTML
         )
@@ -86,7 +86,7 @@ async def channel_receive_handler(bot, broadcast):
             chat_id=broadcast.chat.id,
             message_id=broadcast.id,
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("📥 Fast Download Link", url=shortened_link)]])
+                [[InlineKeyboardButton("📥 Fast Download Link", url=stream_link)]])
         )
     except FloodWait as w:
         print(f"Sleeping for {str(w.x)}s")
