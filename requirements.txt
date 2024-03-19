@@ -13,3 +13,5 @@ telegraph
 openai
 pyromod
 speedtest-cli
+pyshorteners
+jinja2
