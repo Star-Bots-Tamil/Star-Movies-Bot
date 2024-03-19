@@ -10,7 +10,7 @@ from aiohttp.http_exceptions import BadStatusLine
 from web.bot import multi_clients, work_loads, StarMoviessBot
 from web.server.exceptions import FIleNotFound, InvalidHash
 from web.utils import StartTime, __version__
-from web.utils.custom_dl import ByteStreamer
+from web.utils.custom_dl import TGCustomYield
 from web.utils.time_format import get_readable_time
 from web.utils.render_template import render_page
 from info import *
@@ -80,10 +80,10 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
 
     if faster_client in class_cache:
         tg_connect = class_cache[faster_client]
-        logging.debug(f"Using cached ByteStreamer object for client {index}")
+        logging.debug(f"Using cached TGCustomYield object for client {index}")
     else:
-        logging.debug(f"Creating new ByteStreamer object for client {index}")
-        tg_connect = ByteStreamer(faster_client)
+        logging.debug(f"Creating new TGCustomYield object for client {index}")
+        tg_connect = TGCustomYield(faster_client)
         class_cache[faster_client] = tg_connect
     logging.debug("before calling get_file_properties")
     file_id = await tg_connect.get_file_properties(id)
