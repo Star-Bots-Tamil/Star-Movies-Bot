@@ -74,7 +74,7 @@ async def channel_receive_handler(bot, broadcast):
         log_msg = await broadcast.forward(chat_id=BIN_CHANNEL)
         file_name = get_media_file_name(broadcast)
         file_hash = get_hash(log_msg, HASH_LENGTH)
-        stream_link = f"{URL}watch/{log_msg.id}"
+        stream_link = f"{URL}watch/{log_msg.id}/{file_name}?hash={file_hash}"
         shortened_link = await get_shortlink(stream_link)
 
         await log_msg.reply_text(
@@ -86,7 +86,7 @@ async def channel_receive_handler(bot, broadcast):
             chat_id=broadcast.chat.id,
             message_id=broadcast.id,
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("📥 Fast Download Link", url=f"https://t.me/{(await bot.get_me()).username}?start=Star_Bots_Tamil_{str(log_msg.id)}")]])
+                [[InlineKeyboardButton("📥 Fast Download Link", url=shortened_link)]])
         )
     except FloodWait as w:
         print(f"Sleeping for {str(w.x)}s")
