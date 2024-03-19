@@ -82,7 +82,7 @@ async def aks_downloader(bot, query):
     await query.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(btn)
     )
-
+    
 @Client.on_message(
     filters.private
     & (
@@ -97,34 +97,16 @@ async def aks_downloader(bot, query):
     ),
     group=4,
 )
-async def media_receive_handler(_, m: Message):
-    log_msg = await m.forward(chat_id=BIN_CHANNEL)
-    file_hash = get_hash(log_msg, HASH_LENGTH)
-    stream_link = f"{URL}{log_msg.id}/{quote_plus(get_media_file_name(m))}?hash={file_hash}"
-    online_link = f"{URL}Watch/{log_msg.id}/{quote_plus(get_media_file_name(m))}?hash={file_hash}"
-    short_link = await get_shortlinkk(online_link)
-    file_caption = m.caption
-    file_name = get_media_file_name(log_msg)
-    logging.info(f"Generated link :- {stream_link} for {m.from_user.first_name}")
-    try:
-        await m.reply_text(
-            text="<b>Your Link is Generated... ⚡\n\n📁 File Name :- {}\n\n📦 File Size :- \n\n🔠 File Captain :- {}\n\n📥 Download Link :- {}\n\n🖥 Watch Link :- {}\n\n(<a href='{}'>🔗 Shortened Link</a>)\n\n❗ Note :- This Link is Permanent and Won't Gets Expired 🚫</b>".format(
-                file_name, file_caption, stream_link, online_link, short_link
-            ),
-            quote=True,
-            parse_mode=ParseMode.HTML,
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("📥 Download Link", url=stream_link)], [InlineKeyboardButton("🖥 Watch Link", url=online_link)], [InlineKeyboardButton("🔗 Shortened Link", url=short_link)], [InlineKeyboardButton("🔥 Update Channel", url="https://t.me/Star_Bots_Tamil")]]
-            ),
-        )
-    except errors.ButtonUrlInvalid:
-        await m.reply_text(
-            text="<b>Your Link is Generated... ⚡\n\n📁 File Name :- {}\n\n📦 File Size :- \n\n🔠 File Captain :- {}\n\n📥 Download Link :- {}\n\n🖥 Watch Link :- {}\n\n(<a href='{}'>🔗 Shortened Link</a>)\n\n❗ Note :- This Link is Permanent and Won't Gets Expired 🚫</b>".format(
-                file_name, file_caption, stream_link, online_link, short_link
-            ),
-            quote=True,
-            parse_mode=ParseMode.HTML,
-        )
+async def handle_media_message(client, message):
+    reply_markup = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Generate Link", callback_data="stream")]]
+    )
+    await message.reply_text(
+        "Here's your media.",
+        reply_markup=reply_markup
+    )
+
+#@Client.on_message(
 
 @Client.on_message(
     filters.channel
