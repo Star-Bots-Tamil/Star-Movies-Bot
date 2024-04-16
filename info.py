@@ -118,7 +118,7 @@ if len(BIN_CHANNEL) == 0:
     exit()
 else:
     BIN_CHANNEL = int(BIN_CHANNEL)
-URL = environ.get("URL", "https://starmovies.onrender.com")
+URL = environ.get("URL", "https://starstreamer.onrender.com")
 if len(URL) == 0:
     print('Error - URL is missing, exiting now')
     exit()
